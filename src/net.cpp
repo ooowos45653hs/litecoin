@@ -1192,18 +1192,18 @@ void MapPort(bool)
 // The first name is used as information source for addrman.
 // The second name should resolve to a list of seed addresses.
 static const char *strMainNetDNSSeed[][2] = {
-    //{"litecointools.com", "dnsseed.litecointools.com"},
-    //{"litecoinpool.org", "dnsseed.litecoinpool.org"},
-    //{"xurious.com", "dnsseed.ltc.xurious.com"},
-    //{"koin-project.com", "dnsseed.koin-project.com"},
-    //{"weminemnc.com", "dnsseed.weminemnc.com"},
+   // {"litecointools.com", "dnsseed.litecointools.com"},
+//    {"litecoinpool.org", "dnsseed.litecoinpool.org"},
+//    {"xurious.com", "dnsseed.ltc.xurious.com"},
+//    {"koin-project.com", "dnsseed.koin-project.com"},
+//    {"weminemnc.com", "dnsseed.weminemnc.com"},
     {NULL, NULL}
 };
 
 static const char *strTestNetDNSSeed[][2] = {
-    //{"litecointools.com", "testnet-seed.litecointools.com"},
-    //{"xurious.com", "testnet-seed.ltc.xurious.com"},
-    //{"wemine-testnet.com", "dnsseed.wemine-testnet.com"},
+//    {"litecointools.com", "testnet-seed.litecointools.com"},
+//    {"xurious.com", "testnet-seed.ltc.xurious.com"},
+//    {"wemine-testnet.com", "dnsseed.wemine-testnet.com"},
     {NULL, NULL}
 };
 
@@ -1252,9 +1252,8 @@ void ThreadDNSAddressSeed()
 
 unsigned int pnSeed[] =
 {
-
-    //0xa32774bc, 0xa22af3a2, 0x0c1f7157, 0xa0b58429, 0x349f3156, 0x9cd6a34d, 0x67eb1c56, 0x20b5e597,
-    //0xd40f7162, 0xa4cb0379, 0x0e1efc53, 0xe5c8e554, 0x3ebf8052, 0x6ee00847, 0x99206883, 0xc851767d
+    NULL
+    
 };
 
 void DumpAddresses()

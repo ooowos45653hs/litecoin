@@ -35,7 +35,7 @@ CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-uint256 hashGenesisBlock("0x12a765e31ffd4059bada1e25190f6e98c99d9714d334efa41a195a7e7e04bfe2");
+uint256 hashGenesisBlock("0xe9ad0581b3e24483ff39a16150e0cb620db5972c02c4d7b0432e76c4a8a0efe9");
 static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // Litecoin: starting difficulty is 1 / 2^12
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
@@ -1084,7 +1084,7 @@ uint256 static GetOrphanRoot(const CBlockHeader* pblock)
 
 int64 static GetBlockValue(int nHeight, int64 nFees)
 {
-    int64 nSubsidy = 1000 * COIN;
+    int64 nSubsidy = 5000 * COIN;
 
     // Subsidy is cut in half every 840000 blocks, which will occur approximately every 4 years
     nSubsidy >>= (nHeight / 840000); // Litecoin: 840k blocks in ~4 years
@@ -2779,7 +2779,7 @@ bool InitBlockIndex() {
         //   vMerkleTree: 97ddfbbae6
 
         // Genesis block
-        const char* pszTimestamp = "Madonna ist the best dancing star !!!!!!! NOVA NICE LOVE www.madonna.com";
+        const char* pszTimestamp = "Madonna ist the best dancing star !!!!!!! 776857675";
         CTransaction txNew;
         txNew.vin.resize(1);
         txNew.vout.resize(1);
@@ -2791,14 +2791,14 @@ bool InitBlockIndex() {
         block.hashPrevBlock = 0;
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 1;
-        block.nTime    = 1398367999;
+        block.nTime    = 1398367993;
         block.nBits    = 0x1e0ffff0;
-        block.nNonce   = 8677;
+        block.nNonce   = 163139;
 
         if (fTestNet)
         {
-            block.nTime    = 1398367999;
-            block.nNonce   = 9000;
+            block.nTime    = 1398367993;
+            block.nNonce   = 163139;
         }
 
         //// debug print
@@ -2806,7 +2806,61 @@ bool InitBlockIndex() {
         printf("%s\n", hash.ToString().c_str());
         printf("%s\n", hashGenesisBlock.ToString().c_str());
         printf("%s\n", block.hashMerkleRoot.ToString().c_str());
-        assert(block.hashMerkleRoot == uint256("0x97ddfbbae6be97fd6cdf3e7ca13232a3afff2353e29badfab7f73011edd4ced9"));
+        assert(block.hashMerkleRoot == uint256("0x1e5289c04957005338cbb0f9285b09f99c8fa125ac3490ad6ad3719f0412e927"));
+       // assert(block.hashMerkleRoot == uint256("0x"));
+////////        
+
+
+    // This part was used to generate the genesis block.
+// Uncomment to use it again.
+
+// If genesis block hash does not match, then generate new genesis hash.
+if (true && block.GetHash() != hashGenesisBlock)
+{
+printf("Searching for genesis block...\n");
+// This will figure out a valid hash and Nonce if you're
+// creating a different genesis block:
+uint256 hashTarget = CBigNum().SetCompact(block.nBits).getuint256();
+uint256 thash;
+char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
+loop
+{
+#if defined(USE_SSE2)
+// Detection would work, but in cases where we KNOW it always has SSE2,
+// it is faster to use directly than to use a function pointer or conditional.
+#if defined(_M_X64) || defined(__x86_64__) || defined(_M_AMD64) || (defined(MAC_OSX) && defined(__i386__))
+// Always SSE2: x86_64 or Intel MacOS X
+scrypt_1024_1_1_256_sp_sse2(BEGIN(block.nVersion), BEGIN(thash), scratchpad);
+#else
+// Detect SSE2: 32bit x86 Linux or Windows
+scrypt_1024_1_1_256_sp(BEGIN(block.nVersion), BEGIN(thash), scratchpad);
+#endif
+#else
+// Generic scrypt
+scrypt_1024_1_1_256_sp_generic(BEGIN(block.nVersion), BEGIN(thash), scratchpad);
+#endif
+if (thash <= hashTarget)
+break;
+if ((block.nNonce & 0xFFF) == 0)
+{
+printf("nonce %08X: hash = %s (target = %s)\n", block.nNonce, thash.ToString().c_str(), hashTarget.ToString().c_str());
+}
+++block.nNonce;
+if (block.nNonce == 0)
+{
+printf("NONCE WRAPPED, incrementing time\n");
+++block.nTime;
+}
+}
+printf("block.nTime = %u \n", block.nTime);
+printf("block.nNonce = %u \n", block.nNonce);
+printf("block.GetHash = %s\n", block.GetHash().ToString().c_str());
+}
+
+
+
+
+/////////
         block.print();
         assert(hash == hashGenesisBlock);
 
